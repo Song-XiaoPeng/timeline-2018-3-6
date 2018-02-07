@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>sone的时光机</title>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+  <style type="text/css">
+    .row-center {
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <Header>
+
+    <!--<div class="demo-avatar">
+      <Avatar :style="{background: '#7265e6'}" shape="square" size="large">{{ user }}</Avatar>
+    </div>-->
+
+  </Header>
+  <i-row>
+    <i-col style="margin:0 auto;text-align:center;">
+      <!--<div style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif;"></div>-->
+      <i-button type="text" @click="window.location.href='/time_line/machine'"><h3>@sone的时光机</h3></i-button>
+    </i-col>
+  </i-row>
+
+
+  <i-row class="row-center">
+    <!--<i-col :xs="12" :sm="12" :md="12" :lg="3">-->
+    <i-col style="width:95%;margin:0 auto">
+      <i-form ref="formCustom" :model="formCustom" :rules="ruleCustom" label-position="top">
+        <form-item label="标题" prop="title"
+                   :rules="{required: true, message: 'title can not be empty', trigger: 'blur'}">
+          <i-input type="text" v-model="formCustom.title"></i-input>
+        </form-item>
+        <form-item label="内容" prop="content"
+                   :rules="{required: true, message: 'content can not be empty', trigger: 'blur'}">
+          <i-input type="textarea" v-model="formCustom.content" :autosize="{minRows: 2,maxRows: 5}"
+                   placeholder="Enter something..."></i-input>
+        </form-item>
+
+
+        <form-item v-for="(item,index) in formElements" :label="item.label">
+          <i-col span="18">
+            <i-input type="text" v-model="formCustom[item.name]"></i-input>
+          </i-col>
+          <i-col span="4" offset="1">
+            <i-button type="ghost" @click="handleRemove(item)">Delete</i-button>
+          </i-col>
+        </form-item>
+
+        <!--
+        <form-item label="摘要" prop="desc">
+          <i-input type="text" v-model="formCustom.desc"></i-input>
+        </form-item>
+        <form-item label="心情" prop="mood">
+          <i-input type="text" v-model="formCustom.mood" number></i-input>
+        </form-item>
+        <form-item label="昵称" prop="author">
+          <i-input type="text" v-model="formCustom.author" number></i-input>
+        </form-item>
+
+        <form-item label="地点" prop="address">
+          <i-input type="text" v-model="formCustom.address" number></i-input>
+        </form-item>
+        <form-item label="天气" prop="weather">
+          <i-input type="text" v-model="formCustom.weather" number></i-input>
+        </form-item>
+        -->
+
+        <form-item :style="styleObj" label="日期" prop="time">
+          <i-col span="12">
+            <date-picker type="date" format="yyyy年MM月dd日" v-model="formCustom.time"></date-picker>
+          </i-col>
+          <i-col span="6">
+            <time-picker @on-open-change="setTime" v-model="time" format="HH:mm"></time-picker>
+          </i-col>
+          <i-col span="4" offset="1">
+            <i-button type="ghost" @click="showDateTimePicker()">Delete</i-button>
+          </i-col>
+        </form-item>
+
+        <form-item>
+          <i-button type="dashed" long @click="handleAdd" icon="plus-round">Add item</i-button>
+        </form-item>
+        <form-item>
+          <i-button :style="styleObj1" type="primary" shape="circle" @click="showDateTimePicker()" icon="plus-round">Add
+            time
+          </i-button>
+        </form-item>
+
+        <form-item>
+          <i-button type="primary" @click="handleSubmit('formCustom')">Submit</i-button>
+          <i-button type="ghost" @click="reset" style="margin-left: 8px">Reset</i-button>
+
+        </form-item>
+
+      </i-form>
+      <Slider v-model="slide" :step="6"></Slider>
+    </i-col>
+    <i-col span="12">
+    </i-col>
+  </i-row>
+
+</div>
+<script src="/static/time_line/js/jquery.min_v1.0.js" type="text/javascript"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        user: 'Sone',
+        color:'#f56a00',
+        time: '',
+        styleObj: {
+          display: 'none'
+        },
+        styleObj1: {
+          display: 'block'
+        },
+        // xs <768px sm ≥768px md ≥992px lg ≥1200px,
+        index: 0,
+        formCustom: {
+          title: '',//标题
+          desc: '',//摘要
+          content: '',//内容
+          mood: '',//心情
+          author: '',//昵称
+          address: '',//地点
+          weather: '',//天气
+          time: ''//发布时间
+        },
+        formElements: [],
+        labels: [
+          {
+            name: 'desc',
+            label: '摘要'
+          },
+          {
+            name: 'mood',
+            label: '心情'
+          },
+          {
+            name: 'author',
+            label: '昵称'
+          },
+          {
+            name: 'address',
+            label: '地点'
+          },
+          {
+            name: 'weather',
+            label: '天气'
+          }
+        ],
+        slide: '',
+        ruleCustom: {}
+      }
+    },
+    methods: {
+      setTimeLineInfo: function () {
+        var that = this;
+
+      },
+      handleAdd: function () {
+        //已有的
+        var had = this.formElements;
+        if (had.length == 0) {
+          had.push(this.labels[0]);
+          return;
+        }
+        //找到已有的name
+        var hadName = [];
+        for (var i = 0; i < had.length; i++) {
+          hadName.push(had[i].name);
+        }
+        //去除已有的name,返回不存在的name
+        var pushName = this.getAllName(hadName);
+        if (pushName.length > 0) {
+          had.push(pushName[0]);
+        }
+      },
+      handleRemove: function (item) {
+        var nowElements = this.formElements;
+        if (nowElements.length <= 1) {
+          nowElements.pop();
+          return;
+        }
+        for (var i = 0; i < nowElements.length; i++) {
+          if (nowElements[i].name == item.name) {
+            nowElements.splice(i, 1);
+          }
+        }
+      },
+      getAllName: function (hadName) {
+        var allName = [];
+        var pushName = [];
+        for (var i = 0; i < this.labels.length; i++) {
+          allName.push(this.labels[i].name);
+          if (hadName.indexOf(this.labels[i].name) == -1) {
+            pushName.push(this.labels[i]);
+          }
+        }
+        return pushName;
+      },
+      handleSubmit: function (name) {
+        var that = this;
+        this.$refs[name].validate(function (valid) {
+          if (valid) {
+            $.post('/time_line/addArticle', that.formCustom, function (resp) {
+              if (resp.code == 0) {
+                that.$Message.success('Success!');
+                that.reset();
+              } else {
+                that.$Message.error('保存失败了');
+              }
+            });
+          } else {
+            that.$Message.error('内容和标题是需要的~');
+          }
+        })
+      },
+      showDateTimePicker: function () {
+        this.styleObj.display = this.styleObj.display == 'none' ? 'block' : 'none';
+        if (this.styleObj.display == 'block') {
+          this.styleObj1.display = 'none';
+        } else {
+          this.styleObj1.display = 'block';
+        }
+      },
+      setTime: function () {
+        this.time = Date.parse(this.time) / 1000;
+        this.formCustom.time += this.time;
+      },
+      reset: function () {
+        this.formCustom.title = '';
+        this.formCustom.desc = '';
+        this.formCustom.content = '';
+        this.formCustom.mood = '';
+        this.formCustom.author = '';
+        this.formCustom.address = '';
+        this.formCustom.weather = '';
+        this.formCustom.time = '';
+      }
+    }
+  })
+</script>
+</body>
+</html>
