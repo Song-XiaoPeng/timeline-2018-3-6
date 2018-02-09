@@ -12,7 +12,17 @@ class Index
 {
     public function index()
     {
-        return "<p>欢迎</p><a href='http://sone.timeline.hellobirds.top/time_line/index'>sone的好看的时光轴</a><br /><a href='http://sone.timeline.hellobirds.top/time_line/machine'>sone的时光机</a><br /><a href='http://sone.hellobirds.top'>sone的博客</a>";
+        return "
+<p>欢迎</p>
+<a href='http://sone.timeline.hellobirds.top/time_line/index'>sone的好看的时光轴</a>
+<br />
+<a href='http://sone.timeline.hellobirds.top/time_line/machine'>sone的时光机</a>
+<br />
+<a href='http://sone.hellobirds.top'>sone的博客</a>
+sone的微信公众号：<br />
+<img src='static/time_line/img/wechat_gzh.jpg' alt='song的微信公众号'><br />
+好玩有趣，欢迎关注
+";
     }
 
     /**
