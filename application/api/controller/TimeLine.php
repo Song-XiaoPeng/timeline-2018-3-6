@@ -90,8 +90,15 @@ class TimeLine
      */
     public function getTimeLineList()
     {
-        $data = Db::name('article')->paginate();
+        try{
+            $data = Db::name('article')->paginate()->each(function($item,$key){
+                $item['date'] = date('Y-m-d H:i:s',$item['date']);
+                return $item;
+            });
+            return json(msg(0, 'success', $data));
+        }catch(Exception $e){
+            return json(msg(1,$e->getMessage()));
+        }
 
-        return json(msg(0, 'success', $data));
     }
 }
