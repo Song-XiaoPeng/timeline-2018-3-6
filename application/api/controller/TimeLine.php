@@ -91,7 +91,7 @@ class TimeLine
     public function getTimeLineList()
     {
         $data = Db::name('article')->paginate();
-        array_walk($data, function (&$v) {
+        array_walk($data['data'], function (&$v) {
             $v['date'] = date('Y-m-d H:i:s', $v['date']);
         });
         return json(msg(0, 'success', $data));
