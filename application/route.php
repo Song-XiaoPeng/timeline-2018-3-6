@@ -31,6 +31,7 @@ return [
         'machine' => ['index/timeLineMachine', ['method' => 'get']],
         //axis
         'index' => ['index/timeLineAxis', ['method' => 'get']],
+        'getTimeLineList' => ['api/TimeLine/getTimeLineList', ['method' => 'get']]
         /**
          * 最常用的一种路由方式,路由到 模块/控制器/操作
          * 把满足条件的路由规则路由到相关的模块、控制器和操作，然后由App类调度执行相关的操作。

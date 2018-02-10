@@ -84,4 +84,14 @@ class TimeLine
             return json(msg(1, $e->getMessage()));
         }
     }
+
+    /**
+     * 后台首页数据列表
+     */
+    public function getTimeLineList()
+    {
+        $data = Db::name('article')->paginate();
+        $res['data']= $data;
+        return json(msg(0,'success',$res));
+    }
 }
