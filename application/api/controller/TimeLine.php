@@ -91,7 +91,6 @@ class TimeLine
     public function getTimeLineList()
     {
         $data = Db::name('article')->paginate();
-        $res['data']= $data;
-        return json(msg(0,'success',$res));
+        return json(msg(0,'success',$data));
     }
 }
