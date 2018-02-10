@@ -10,6 +10,7 @@ namespace app\api\controller;
 
 use think\Exception;
 use think\Db;
+use think\Request;
 
 /**
  * 时光机&&时光轴api接口
@@ -99,6 +100,21 @@ class TimeLine
         }catch(Exception $e){
             return json(msg(1,$e->getMessage()));
         }
+    }
 
+    /**
+     * 根据id获得一条blog的详情
+     * @return \think\response\Json
+     */
+    public function getTimeLineDetail(Request $request)
+    {
+        try{
+            $params = $request->param();
+            $id = $params['id'];
+            $data = Db::name('article')->where('id',$id)->find();
+            return json(msg(0,'success',$data));
+        }catch(Exception $e){
+            return json(msg(1,$e->getMessage()));
+        }
     }
 }
