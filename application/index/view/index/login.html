@@ -78,6 +78,8 @@
     methods: {
       handleSubmit: function (name) {
         var that = this;
+        console.log(window.location.href)
+
         this.$refs[name].validate(function (valid) {
           if (valid) {
             $.post('/time_line/doLogin', that.formCustom, function (resp) {
@@ -88,7 +90,7 @@
               } else {
                 that.$Message.error(resp.msg);
               }
-            });
+            })
           } else {
             that.$Message.error('信息填写错了~');
           }

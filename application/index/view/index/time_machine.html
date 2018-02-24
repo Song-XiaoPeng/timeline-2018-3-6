@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>sone的时光机</title>
+  <title><{$nickname}>的时光机</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
@@ -27,7 +27,7 @@
   <i-row>
     <i-col style="margin:0 auto;text-align:center;">
       <!--<div style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif;"></div>-->
-      <i-button type="text" @click="window.location.href='/time_line/machine'"><h3>@sone的时光机</h3></i-button>
+      <i-button type="text" @click="window.location.href='/time_line/machine'"><h3>@<{$nickname}>的时光机</h3></i-button>
     </i-col>
   </i-row>
 
@@ -99,7 +99,6 @@
         <form-item>
           <i-button type="primary" @click="handleSubmit('formCustom')">Submit</i-button>
           <i-button type="ghost" @click="reset" style="margin-left: 8px">Reset</i-button>
-
         </form-item>
 
       </i-form>

@@ -9,10 +9,14 @@
 namespace app\index\controller;
 
 use think\Controller;
+use think\Db;
 use think\Request;
 
 class Index extends Controller
 {
+    protected $nickname;
+    protected $uid;
+
     public function _initialize()
     {
         $noCheck = [
@@ -27,6 +31,7 @@ class Index extends Controller
         if (!session('user') && !cookie('user')) {
             $this->redirect('login');
         }
+        $this->nickname = session('user') ? session('user') : cookie('user');
     }
 
     public function index()
@@ -51,7 +56,7 @@ class Index extends Controller
      */
     public function timeLineMachine()
     {
-        return view('time_machine'); //默认渲染文件：当前模块/默认视图目录/当前控制器（小写）/当前操作（小写）.html
+        return view('time_machine', ['nickname' => $this->nickname]); //默认渲染文件：当前模块/默认视图目录/当前控制器（小写）/当前操作（小写）.html
         /*
             1. 指定模板输出
             return $this->fetch('edit');
@@ -68,7 +73,7 @@ class Index extends Controller
      */
     public function timeLineAxis()
     {
-        return view('time_axis');
+        return view('time_axis', ['nickname' => $this->nickname]);
     }
 
     public function login()
