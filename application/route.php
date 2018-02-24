@@ -32,6 +32,7 @@ return [
         //machine 路由规则 =》 （路由地址）[模块/控制器/]操作?参数1=值1&参数2=值2...
         'machine' => ['index/timeLineMachine', ['method' => 'get']],
         'login' => ['index/login', ['method' => 'get']],
+        'logout' => ['index/logout', ['method' => 'get']],
         'register' => ['index/register', ['method' => 'get']],
         //axis
         'index' => ['index/timeLineAxis', ['method' => 'get']],

@@ -183,13 +183,4 @@ class TimeLine extends Controller
         }
     }
 
-    /**
-     * 退出登录
-     */
-    public function logout()
-    {
-        cookie('user', null);
-        session('user', null);
-        redirect('time_line/register');
-    }
 }

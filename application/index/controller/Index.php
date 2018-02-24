@@ -85,4 +85,14 @@ class Index extends Controller
     {
         return view('register');
     }
+
+    /**
+     * 退出登录
+     */
+    public function logout()
+    {
+        cookie('user', null);
+        session('user', null);
+        return redirect('login');
+    }
 }
