@@ -110,6 +110,7 @@
             $.post('/time_line/doRegister', that.formCustom, function (resp) {
               if (resp.code == 0) {
                 that.$Message.success('Success!');
+                window.location.href = '/time_line/login'
                 that.reset();
               } else {
                 that.$Message.error('保存失败了');
