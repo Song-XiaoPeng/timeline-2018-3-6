@@ -58,3 +58,23 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-02-07 10:11:50
+
+
+--
+-- Table structure for table `article`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nickname` varchar(64) NOT NULL DEFAULT '' COMMENT '用户名',
+  `password` varchar(32) NOT NULL DEFAULT '' COMMENT '密码',
+  `ip` varchar(255) NOT NULL DEFAULT '' COMMENT 'ip',
+  `createtime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `updatetime` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+  `status` tinyint(3) unsigned NOT NULL DEFAULT 0 '0启用 1禁用',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;

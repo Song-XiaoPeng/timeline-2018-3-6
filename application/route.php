@@ -27,12 +27,16 @@ return [
         //api
         'addArticle' => ['api/TimeLine/addArticle', ['method' => 'post']],//等价于：Route::rule('time_line/addArticle','api/TimeLine/addArticle');
         'getTimeLineData' => ['api/TimeLine/getTimeLineData', ['method' => 'get']],
+        'doRegister' => ['api/TimeLine/doRegister', ['method' => 'post']],
+        'doLogin' => ['api/TimeLine/doLogin', ['method' => 'post']],
         //machine 路由规则 =》 （路由地址）[模块/控制器/]操作?参数1=值1&参数2=值2...
         'machine' => ['index/timeLineMachine', ['method' => 'get']],
+        'login' => ['index/login', ['method' => 'get']],
+        'register' => ['index/register', ['method' => 'get']],
         //axis
         'index' => ['index/timeLineAxis', ['method' => 'get']],
         'getTimeLineList' => ['api/TimeLine/getTimeLineList', ['method' => 'get']],
-        'getTimeLineDetail' => ['api/TimeLine/getTimeLineDetail', ['method' => 'get']]
+        'getTimeLineDetail' => ['api/TimeLine/getTimeLineDetail', ['method' => 'get']],
         /**
          * 最常用的一种路由方式,路由到 模块/控制器/操作
          * 把满足条件的路由规则路由到相关的模块、控制器和操作，然后由App类调度执行相关的操作。

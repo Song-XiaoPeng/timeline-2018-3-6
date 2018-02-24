@@ -8,15 +8,34 @@
 
 namespace app\index\controller;
 
-class Index
+use think\Controller;
+use think\Request;
+
+class Index extends Controller
 {
+    public function _initialize()
+    {
+        $noCheck = [
+            'index', 'login', 'register'
+        ];
+
+        $request = Request::instance();
+
+        if (in_array($request->action(), $noCheck)) {
+            return true;
+        }
+        if (!session('user') && !cookie('user')) {
+            $this->redirect('login');
+        }
+    }
+
     public function index()
     {
         return "
                     <p>欢迎</p>
-                    <a href='http://sone.timeline.hellobirds.top/time_line/index'>sone的好看的时光轴</a>
+                    <a href='/time_line/index'>sone的好看的时光轴</a>
                     <br />
-                    <a href='http://sone.timeline.hellobirds.top/time_line/machine'>sone的时光机</a>
+                    <a href='/time_line/machine'>sone的时光机</a>
                     <br />
                     <a href='http://sone.hellobirds.top'>sone的博客</a>
                     <br />
@@ -50,5 +69,15 @@ class Index
     public function timeLineAxis()
     {
         return view('time_axis');
+    }
+
+    public function login()
+    {
+        return view('login');
+    }
+
+    public function register()
+    {
+        return view('register');
     }
 }

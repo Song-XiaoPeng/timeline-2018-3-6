@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>sone的时光机</title>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+
+  <link rel="stylesheet" type="text/css" href="http://unpkg.com/iview/dist/styles/iview.css">
+  <script type="text/javascript" src="http://vuejs.org/js/vue.min.js"></script>
+  <script type="text/javascript" src="http://unpkg.com/iview/dist/iview.min.js"></script>
+  <style type="text/css">
+    .row-center {
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <Header>
+
+    <!--<div class="demo-avatar">
+      <Avatar :style="{background: '#7265e6'}" shape="square" size="large">{{ user }}</Avatar>
+    </div>-->
+
+  </Header>
+  <i-row>
+    <i-col style="margin:0 auto;text-align:center;">
+      <!--<div style="font-family: 'Helvetica Neue',Helvetica,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','微软雅黑',Arial,sans-serif;"></div>-->
+      <i-button type="text" @click="window.location.href='/time_line/machine'"><h3>@sone的时光机</h3></i-button>
+    </i-col>
+  </i-row>
+
+
+  <i-row class="row-center">
+    <!--<i-col :xs="12" :sm="12" :md="12" :lg="3">-->
+    <i-col style="width:95%;margin:0 auto">
+      <i-form ref="formCustom" :model="formCustom" :rules="ruleCustom" label-position="top">
+        <form-item label="昵称" prop="nickname">
+          <i-input type="text" v-model="formCustom.nickname"></i-input>
+        </form-item>
+        <form-item label="密码" prop="password">
+          <i-input type="password" v-model="formCustom.password" placeholder=""></i-input>
+        </form-item>
+        <form-item>
+          <i-button type="primary" @click="handleSubmit('formCustom')">Login</i-button>
+          <i-button type="ghost" @click="window.location.href ='/time_line/register'" style="margin-left: 8px">Register</i-button>
+        </form-item>
+      </i-form>
+      <Slider v-model="slide" :step="6"></Slider>
+    </i-col>
+    <i-col span="12">
+    </i-col>
+  </i-row>
+
+</div>
+<script src="/static/time_line/js/jquery.min_v1.0.js" type="text/javascript"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data: function () {
+      return {
+        formCustom: {
+          nickname:'',
+          password:''
+        },
+        slide:'',
+        ruleCustom: {
+          nickname: [
+            { required: true, message: 'nickname can not be empty', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: 'password can not be empty', trigger: 'blur' }
+          ]
+        }
+      }
+    },
+    methods: {
+      handleSubmit: function (name) {
+        var that = this;
+        this.$refs[name].validate(function (valid) {
+          if (valid) {
+            $.post('/time_line/doLogin', that.formCustom, function (resp) {
+              if (resp.code == 0) {
+                that.$Message.success('Success!');
+                window.location.href = '/time_line/machine'
+                that.reset();
+              } else {
+                that.$Message.error(resp.msg);
+              }
+            });
+          } else {
+            that.$Message.error('信息填写错了~');
+          }
+        })
+      },
+      reset() {
+        for(var key in this.formCustom){
+          this.formCustom[key] = ''
+        }
+      }
+    }
+  })
+</script>
+</body>
+</html>

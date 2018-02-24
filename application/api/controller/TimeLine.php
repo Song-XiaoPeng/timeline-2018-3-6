@@ -8,6 +8,8 @@
 
 namespace app\api\controller;
 
+use app\api\model\User;
+use think\Controller;
 use think\Exception;
 use think\Db;
 use think\Request;
@@ -17,8 +19,20 @@ use think\Request;
  * Class TimeLine
  * @package app\api\controller
  */
-class TimeLine
+class TimeLine extends Controller
 {
+    protected $nickname;
+    protected $uid;
+
+    public function _initialize()
+    {
+        if (!session('user') && !cookie('user')) {
+            return false;
+        }
+        $this->nickname = session('user') ? session('user') : cookie('user');
+        $this->uid = Db::name('user')->where(['nickname' => $this->nickname])->value('id');
+    }
+
     /**
      * 时光机页面：添加数据
      * @return \think\response\Json
@@ -29,6 +43,8 @@ class TimeLine
             $data = input();
             $data['date'] = strtotime(date('Y-m-d', time()));//年月日
             $data['time'] = time() - strtotime(date('Y-m-d', time()));//时间
+            $data['uid'] = $this->uid;
+            $data['ip'] = request()->ip();
             Db::name('article')->insert($data);
             return json(msg(0, 'success'));
         } catch (Exception $e) {
@@ -51,7 +67,11 @@ class TimeLine
     public function getTimeLineData()
     {
         try {
-            $data = Db::name('article')->order('date desc,time desc')->where('status', 0)->select();
+            $where = [
+                'status' => 0,
+                'uid' => $this->uid
+            ];
+            $data = Db::name('article')->order('date desc,time desc')->where($where)->select();
             array_walk($data, function (&$v) {
                 $v['year'] = date('Y', $v['date']);
                 $v['month'] = date('m', $v['date']);
@@ -91,14 +111,14 @@ class TimeLine
      */
     public function getTimeLineList()
     {
-        try{
-            $data = Db::name('article')->paginate()->each(function($item,$key){
-                $item['date'] = date('Y-m-d H:i:s',$item['date']);
+        try {
+            $data = Db::name('article')->paginate()->each(function ($item, $key) {
+                $item['date'] = date('Y-m-d H:i:s', $item['date']);
                 return $item;
             });
             return json(msg(0, 'success', $data));
-        }catch(Exception $e){
-            return json(msg(1,$e->getMessage()));
+        } catch (Exception $e) {
+            return json(msg(1, $e->getMessage()));
         }
     }
 
@@ -108,13 +128,68 @@ class TimeLine
      */
     public function getTimeLineDetail(Request $request)
     {
-        try{
+        try {
             $params = $request->param();
             $id = $params['id'];
-            $data = Db::name('article')->where('id',$id)->find();
-            return json(msg(0,'success',$data));
-        }catch(Exception $e){
-            return json(msg(1,$e->getMessage()));
+            $data = Db::name('article')->where('id', $id)->find();
+            return json(msg(0, 'success', $data));
+        } catch (Exception $e) {
+            return json(msg(1, $e->getMessage()));
         }
+    }
+
+
+    /**
+     * 注册用户
+     */
+    public function doRegister(Request $request)
+    {
+        try {
+            $params = $request->param();
+            $user = new User();
+            if ($user->doRegister($params)) {
+                $user->data($params);
+                $res = $user->allowField(['nickname', 'password'])->save();
+                $msg = $res ? msg(0, 'success') : msg(1, 'fail');
+            } else {
+                $msg = msg(1, $user->error);
+            }
+            return json($msg);
+        } catch (Exception $e) {
+            return json(msg(1, $e->getMessage()));
+        }
+    }
+
+    /**
+     * 登录
+     * @param Request $request
+     * @return \think\response\Json
+     */
+    public function doLogin(Request $request)
+    {
+        try {
+            $params = $request->param();
+            $user = new User();
+            if ($user->doLogin($params)) {
+                cookie('user', $params['nickname']);
+                session('user', $params['nickname']);
+                $msg = msg(0, '登陆成功！');
+            } else {
+                $msg = msg(1, '登录失败了');
+            }
+            return json($msg);
+        } catch (Exception $e) {
+            return json(msg(1, $e->getMessage()));
+        }
+    }
+
+    /**
+     * 退出登录
+     */
+    public function logout()
+    {
+        cookie('user', null);
+        session('user', null);
+        redirect('time_line/register');
     }
 }
