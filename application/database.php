@@ -9,17 +9,19 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+use think\Env;
+
 return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => 'www.hellobirds.top',
+    'hostname'        => Env::get('db.hostname'),
     // 数据库名
-    'database'        => 'timeline',
+    'database'        => Env::get('db.database'),
     // 用户名
-    'username'        => 'root',
+    'username'        => Env::get('db.username'),
     // 密码
-    'password'        => 'root',
+    'password'        => Env::get('db.password'),
     // 端口
     'hostport'        => '',
     // 连接dsn
