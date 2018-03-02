@@ -44,6 +44,8 @@ class Index extends Controller
                     <br />
                     <a href='http://sone.hellobirds.top'>sone的博客</a>
                     <br />
+                    <a href='https://github.com/Song-XiaoPeng'>sone的github</a>
+                    <br />
                     sone的微信公众号：<br />
                     <img src='static/time_line/img/wechat_gzh.jpg' alt='song的微信公众号'><br />
                     好玩有趣，欢迎关注~。
