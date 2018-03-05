@@ -112,10 +112,13 @@ class TimeLine extends Controller
     public function getTimeLineList()
     {
         try {
-            $data = Db::name('article')->paginate()->each(function ($item, $key) {
-                $item['date'] = date('Y-m-d H:i:s', $item['date']);
-                return $item;
-            });
+            $page_size = input('page_size',10);
+            $data = Db::name('article')
+                ->paginate($page_size)
+                ->each(function ($item, $key) {
+                    $item['date'] = date('Y-m-d H:i:s', $item['date']);
+                    return $item;
+                });
             return json(msg(0, 'success', $data));
         } catch (Exception $e) {
             return json(msg(1, $e->getMessage()));
