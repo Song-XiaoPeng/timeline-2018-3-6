@@ -15,6 +15,11 @@
 define('APP_PATH', __DIR__ . '/../application/');
 header("Access-Control-Allow-Origin: *");
 header('Access-Control-Allow-Headers:x-requested-with,content-type,token');
+
+if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
+   return;
+}
+
 // 加载框架引导文件
 require __DIR__ . '/../thinkphp/start.php';
 

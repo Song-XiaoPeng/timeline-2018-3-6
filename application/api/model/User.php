@@ -2,6 +2,7 @@
 
 namespace app\api\model;
 
+use think\Db;
 use think\Loader;
 use think\Model;
 
@@ -58,10 +59,22 @@ class User extends Model
     {
         $where = [
             'nickname' => $data['nickname'],
-            'password' => md5($data['password'])
         ];
-
-        if (self::get($where)) {
+        $user = Db::name('user')->where($where)->find();
+        if (!empty($user) && $user['password'] == md5($data['password'])) {
+            if (isset($data['type']) && $data['type'] == 'backend') {
+                $accessToken = md5($data['nickname'] . time());
+                Db::name('user')->update([
+                    'access_token' => $accessToken,
+                    'expire_time' => 7 * 3600,
+                    'id'=>$user['id']
+                ]);
+                return [
+                    'uid' => $user['id'],
+                    'nickname' => $data['nickname'],
+                    'accesstoken' => $accessToken
+                ];
+            }
             return true;
         } else {
             return false;

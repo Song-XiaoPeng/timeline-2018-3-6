@@ -29,9 +29,11 @@ return [
         'getTimeLineData' => ['api/TimeLine/getTimeLineData', ['method' => 'get']],
         'doRegister' => ['api/TimeLine/doRegister', ['method' => 'post']],
         'doLogin' => ['api/TimeLine/doLogin', ['method' => 'post']],
+        'setTimeLine' => ['api/TimeLine/setTimeLine', ['method' => 'post']],
+        'delTimeLine' => ['api/TimeLine/delTimeLine', ['method' => 'post']],
         //machine 路由规则 =》 （路由地址）[模块/控制器/]操作?参数1=值1&参数2=值2...
         'machine' => ['index/timeLineMachine', ['method' => 'get']],
-        'login' => ['index/login', ['method' => 'get']],
+        'login' => ['index/login', ['method' => 'get|post']],
         'logout' => ['index/logout', ['method' => 'get']],
         'register' => ['index/register', ['method' => 'get']],
         //axis
