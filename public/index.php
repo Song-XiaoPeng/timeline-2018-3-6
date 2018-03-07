@@ -14,7 +14,7 @@
 // 定义应用目录
 define('APP_PATH', __DIR__ . '/../application/');
 header("Access-Control-Allow-Origin: *");
-header('Access-Control-Allow-Headers:x-requested-with,content-type,token');
+header('Access-Control-Allow-Headers:x-requested-with,content-type,access-token');
 
 if($_SERVER['REQUEST_METHOD'] == "OPTIONS"){
    return;

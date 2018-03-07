@@ -8,6 +8,7 @@
 
 namespace app\api\controller;
 
+use app\api\common\Auth;
 use app\api\model\User;
 use think\Controller;
 use think\Exception;
@@ -19,7 +20,7 @@ use think\Request;
  * Class TimeLine
  * @package app\api\controller
  */
-class TimeLine extends Controller
+class TimeLine extends Auth
 {
     protected $nickname;
     protected $uid;
@@ -107,44 +108,6 @@ class TimeLine extends Controller
     }
 
     /**
-     * 后台首页数据列表
-     */
-    public function getTimeLineList()
-    {
-        try {
-            $page_size = input('page_size', 10);
-            $data = Db::name('article')
-                ->paginate($page_size)
-                ->each(function ($item, $key) {
-                    $item['date'] = date('Y-m-d H:i:s', $item['date']);
-                    return $item;
-                });
-            return json(msg(0, 'success', $data));
-        } catch (Exception $e) {
-            return json(msg(1, $e->getMessage()));
-        }
-    }
-
-    /**
-     * 根据id获得一条blog的详情
-     * @return \think\response\Json
-     */
-    public function getTimeLineDetail(Request $request)
-    {
-        try {
-            $params = $request->param();
-            $id = $params['id'];
-            $data = Db::name('article')->where('id', $id)->find();
-            $data['time'] = date('H:i:s', $data['time']);
-            $data['date'] = date('Y-m-d', $data['date']);
-            return json(msg(0, 'success', $data));
-        } catch (Exception $e) {
-            return json(msg(1, $e->getMessage()));
-        }
-    }
-
-
-    /**
      * 注册用户
      */
     public function doRegister(Request $request)
@@ -178,7 +141,7 @@ class TimeLine extends Controller
             if ($res = $user->doLogin($params)) {
                 cookie('user', $params['nickname'], 3600 * 24 * 7);
                 session('user', $params['nickname']);
-                $msg = msg(0, '登陆成功！', $res);
+                $msg = msg(0, '登陆成功！');
             } else {
                 $msg = msg(1, '登录失败了');
             }
@@ -187,54 +150,4 @@ class TimeLine extends Controller
             return json(msg(1, $e->getMessage()));
         }
     }
-
-    /**
-     * 修改文章
-     */
-    public function setTimeLine(Request $request)
-    {
-        try {
-            $params = $request->param();
-            $data = [
-                'title' => $params['title'],
-                'desc' => $params['desc'],
-                'content' => $params['content'],
-                'mood' => $params['mood'],
-                'author' => $params['author'],
-                'address' => $params['address'],
-                'weather' => $params['weather'],
-                'date' => $params['date'],
-            ];
-            $data['time'] = strtotime(date("Y-m-d", $params['date']) . " " . $params['time']) - $params['date'];
-            if (empty($params['id'])) {
-                Db::name('article')->insert($data);
-            } else {
-                $data['id'] = $params['id'];
-                Db::name('article')->update($data);
-            }
-            return json(msg(0, 'success'));
-        } catch (Exception $e) {
-            return json(msg(1, $e->getMessage()));
-        }
-    }
-
-    /**
-     * 删除文章
-     */
-    public function delTimeLine(Request $request)
-    {
-        try {
-            $params = $request->param();
-            $status = Db::name('article')->where('id',$params['id'])->value('status');
-            $data = [
-                'id' => $params['id'],
-                'status' => $status == 0 ? 1 : 0
-            ];
-            Db::name('article')->update($data);
-            return json(msg(0, 'success'));
-        } catch (Exception $e) {
-            return json(msg(1, $e->getMessage()));
-        }
-    }
-
 }

@@ -82,7 +82,7 @@
 
         this.$refs[name].validate(function (valid) {
           if (valid) {
-            $.post('/time_line/doLogin', that.formCustom, function (resp) {
+            $.post('/time_line/doLoginFront', that.formCustom, function (resp) {
               if (resp.code == 0) {
                 that.$Message.success('Success!');
                 window.location.href = '/time_line/machine'

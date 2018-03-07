@@ -15,6 +15,8 @@
  * '路由表达式','路由地址','请求类型','路由参数（数组）','变量规则（数组）'
  *
  */
+//machine 路由规则 =》 （路由地址）[模块/控制器/]操作?参数1=值1&参数2=值2...
+//路由分组：允许把相同前缀的路由定义合并分组，这样可以提高路由匹配的效率，不必每次都去遍历完整的路由规则。
 return [
     '__pattern__' => [
         'name' => '\w+',
@@ -23,23 +25,31 @@ return [
         ':id' => ['index/hello', ['method' => 'get'], ['id' => '\d+']],
         ':name' => ['index/hello', ['method' => 'post']],
     ],
-    '[time_line]' => [ //路由分组：允许把相同前缀的路由定义合并分组，这样可以提高路由匹配的效率，不必每次都去遍历完整的路由规则。
-        //api
+    '[time_line]' => [
+        //前台api
         'addArticle' => ['api/TimeLine/addArticle', ['method' => 'post']],//等价于：Route::rule('time_line/addArticle','api/TimeLine/addArticle');
         'getTimeLineData' => ['api/TimeLine/getTimeLineData', ['method' => 'get']],
         'doRegister' => ['api/TimeLine/doRegister', ['method' => 'post']],
-        'doLogin' => ['api/TimeLine/doLogin', ['method' => 'post']],
-        'setTimeLine' => ['api/TimeLine/setTimeLine', ['method' => 'post']],
-        'delTimeLine' => ['api/TimeLine/delTimeLine', ['method' => 'post']],
-        //machine 路由规则 =》 （路由地址）[模块/控制器/]操作?参数1=值1&参数2=值2...
+        'doLoginFront' => ['api/TimeLine/doLogin', ['method' => 'post']],
+
+
+        //后台api
+        'getTimeLineList' => ['api/TimeLineBackend/getTimeLineList', ['method' => 'get']],
+        'getTimeLineDetail' => ['api/TimeLine/getTimeLineDetail', ['method' => 'get']],
+        'setTimeLine' => ['api/TimeLineBackend/setTimeLine', ['method' => 'post']],
+        'delTimeLine' => ['api/TimeLineBackend/delTimeLine', ['method' => 'post']],
+        'doLoginBackend' => ['api/User/doLogin', ['method' => 'post']],
+
+        //通用
         'machine' => ['index/timeLineMachine', ['method' => 'get']],
         'login' => ['index/login', ['method' => 'get|post']],
         'logout' => ['index/logout', ['method' => 'get']],
         'register' => ['index/register', ['method' => 'get']],
+
         //axis
         'index' => ['index/timeLineAxis', ['method' => 'get']],
-        'getTimeLineList' => ['api/TimeLine/getTimeLineList', ['method' => 'get']],
-        'getTimeLineDetail' => ['api/TimeLine/getTimeLineDetail', ['method' => 'get']],
+
+
         /**
          * 最常用的一种路由方式,路由到 模块/控制器/操作
          * 把满足条件的路由规则路由到相关的模块、控制器和操作，然后由App类调度执行相关的操作。
